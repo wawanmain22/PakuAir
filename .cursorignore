@@ -1,0 +1,63 @@
+# Build output directories
+/build
+/app/build
+/*/build/
+
+# Gradle files
+.gradle/
+gradle.properties
+local.properties
+
+# IDE files
+.idea/
+*.iml
+
+# Generated files
+bin/
+gen/
+out/
+
+# Compiled files
+*.class
+*.dex
+*.jar
+*.war
+*.ear
+*.apk
+*.aab
+
+# Log files
+*.log
+
+# Android Studio captures
+captures/
+
+# Native build
+.externalNativeBuild/
+.cxx/
+
+# Mac OS files
+.DS_Store
+
+# Windows files
+Thumbs.db
+Desktop.ini
+
+# Firebase config
+google-services.json
+
+# Keystore files
+*.jks
+*.keystore
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*~
+
+# Large media files
+*.mp4
+*.mov
+*.avi
+*.wmv 

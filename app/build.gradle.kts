@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.example.pakuair"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.pakuair"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -41,14 +41,28 @@ android {
 }
 
 dependencies {
+    // AndroidX Core
     implementation(libs.androidx.core.ktx)
-    implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.database.ktx)
-    implementation(libs.firebase.database)
-    implementation(libs.firebase.storage)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.appcompat.v131)
+
+    // Material Design
+    implementation(libs.material)
+    implementation(libs.material.v140)
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-database")
+    implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-appcheck-playintegrity")
+
+    // Glide
+    implementation(libs.glide)
+    annotationProcessor(libs.glide.compiler)
 
     // Retrofit + OkHttp
     implementation(libs.retrofit)
@@ -57,15 +71,11 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.gson)
 
-    // Glide
-    implementation(libs.glide)
-    annotationProcessor(libs.glide.compiler)
+    // Charts
+    implementation(libs.mpandroidchart)
 
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.mpandroidchart)
-    implementation(libs.androidx.recyclerview)
-    implementation(libs.material.v140)
-    implementation(libs.androidx.appcompat.v131)
 }
