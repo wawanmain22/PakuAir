@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "356371910178",
+    "project_id": "pakuair",
+    "storage_bucket": "pakuair.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:356371910178:android:c5c2851912184724b2447b",
+        "android_client_info": {
+          "package_name": "com.example.pakuair"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCitUszC_ZN-yw1QdEz_iIVBuBMta1y2uM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

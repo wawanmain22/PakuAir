@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_main_menu"
+            android:icon="@drawable/ic_home"
+            android:title="Main Menu"/>
+        <item
+            android:id="@+id/nav_article_list"
+            android:icon="@drawable/ic_article"
+            android:title="Article List"/>
+        <item
+            android:id="@+id/menu_profile"
+            android:icon="@drawable/iconoir_profile_circle"
+            android:title="Halaman Profile"
+            />
+
+        <item
+            android:id="@+id/menu_toko"
+            android:icon="@drawable/ic_store"
+            android:title="Halaman Toko Pribadi"
+           />
+
+        <item
+            android:id="@+id/menu_logout"
+            android:icon="@drawable/ic_logout"
+            android:title="Log Out"
+            />
+    </group>
+</menu>

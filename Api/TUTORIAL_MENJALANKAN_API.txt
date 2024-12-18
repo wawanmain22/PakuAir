@@ -1,0 +1,87 @@
+TUTORIAL MENJALANKAN API PREDIKSI KUALITAS AIR
+=============================================
+
+1. MEMBUAT VIRTUAL ENVIRONMENT (VENV)
+------------------------------------
+# Buka terminal/command prompt
+# Arahkan ke direktori project
+cd path/to/project
+
+# Membuat virtual environment
+python -m venv venv
+
+
+2. MENGAKTIFKAN VIRTUAL ENVIRONMENT
+---------------------------------
+# Untuk Windows
+venv\Scripts\activate
+
+# Untuk Linux/Mac
+source venv/bin/activate
+
+
+3. INSTALASI DEPENDENCIES
+------------------------
+# Pastikan virtual environment sudah aktif (akan muncul (venv) di terminal)
+# Install semua package yang dibutuhkan
+pip install -r requirements.txt
+
+
+4. MENJALANKAN API
+-----------------
+# Pastikan file water_potability.pkl ada di direktori yang sama dengan api.py
+# Jalankan API dengan perintah
+python api.py
+
+# API akan berjalan di http://127.0.0.1:5000
+# Buka browser dan akses URL tersebut untuk melihat dokumentasi API
+
+
+5. MENGGUNAKAN API
+-----------------
+A. Melalui Browser:
+   - Buka http://127.0.0.1:5000
+   - Anda akan melihat dokumentasi lengkap API dan cara penggunaannya
+
+B. Melakukan Prediksi:
+   Gunakan tools seperti Postman, curl, atau kode program lain untuk mengirim POST request ke:
+   http://127.0.0.1:5000/predict
+
+   Contoh format JSON untuk request:
+   {
+       "ph": 7.0,
+       "Hardness": 204.0,
+       "Solids": 20791.0,
+       "Chloramines": 7.3,
+       "Sulfate": 368.0,
+       "Conductivity": 564.0,
+       "Organic_carbon": 10.0,
+       "Trihalomethanes": 86.0,
+       "Turbidity": 2.7
+   }
+
+   Contoh response yang akan diterima:
+   {
+       "potability": 1,
+       "message": "Air layak minum"
+   }
+
+   Keterangan nilai potability:
+   - 0: Air tidak layak minum
+   - 1: Air layak minum
+
+
+6. MENONAKTIFKAN VIRTUAL ENVIRONMENT
+----------------------------------
+# Setelah selesai menggunakan API, nonaktifkan venv dengan perintah:
+deactivate
+
+
+CATATAN PENTING:
+---------------
+- Pastikan Python sudah terinstall di sistem
+- Pastikan file model 'water_potability.pkl' ada di direktori yang sama dengan api.py
+- API menggunakan lazy loading, artinya model akan di-load saat request pertama
+- Server menggunakan Waitress sebagai production server yang lebih aman dan stabil
+- Jika ada error saat instalasi requirements, pastikan pip sudah versi terbaru:
+  pip install --upgrade pip
