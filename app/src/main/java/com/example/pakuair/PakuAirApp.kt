@@ -2,19 +2,16 @@ package com.example.pakuair
 
 import android.app.Application
 import com.google.firebase.FirebaseApp
-import com.google.firebase.appcheck.FirebaseAppCheck
-import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
+import com.google.firebase.database.FirebaseDatabase
 
 class PakuAirApp : Application() {
     override fun onCreate() {
         super.onCreate()
+        
         // Initialize Firebase
         FirebaseApp.initializeApp(this)
         
-        // Initialize Firebase App Check
-        val firebaseAppCheck = FirebaseAppCheck.getInstance()
-        firebaseAppCheck.installAppCheckProviderFactory(
-            PlayIntegrityAppCheckProviderFactory.getInstance()
-        )
+        // Enable Firebase Database persistence
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
     }
 } 

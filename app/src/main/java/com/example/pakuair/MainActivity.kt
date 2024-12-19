@@ -11,14 +11,14 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.lifecycleScope
+import com.example.pakuair.utils.FirebaseUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
-    private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var database: DatabaseReference
-
     private lateinit var tvUserName: TextView
     private lateinit var tvUserEmail: TextView
     private lateinit var tvLandingUsername: TextView
@@ -27,19 +27,31 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Initialize FirebaseAuth and DatabaseReference
-        firebaseAuth = FirebaseAuth.getInstance()
-        database = FirebaseDatabase.getInstance().reference
+        // Check if user is logged in
+        if (!FirebaseUtils.isUserLoggedIn()) {
+            startActivity(Intent(this, SignInActivity::class.java))
+            finish()
+            return
+        }
 
         // Initialize Toolbar and set as action bar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         // Setup DrawerLayout and NavigationView
+        setupNavigationDrawer(toolbar)
+
+        // Setup CardView click listeners
+        setupCardViewListeners()
+
+        // Load user data
+        loadUserData()
+    }
+
+    private fun setupNavigationDrawer(toolbar: Toolbar) {
         drawerLayout = findViewById(R.id.drawer_layout)
         val navigationView: NavigationView = findViewById(R.id.nav_view)
 
-        // Add toggle for burger menu
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar,
             R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -51,12 +63,7 @@ class MainActivity : AppCompatActivity() {
         val headerView = navigationView.getHeaderView(0)
         tvUserName = headerView.findViewById(R.id.tv_user_name)
         tvUserEmail = headerView.findViewById(R.id.tv_user_email)
-
-        // Optionally set username on the main content
         tvLandingUsername = findViewById(R.id.tv_landing_username)
-
-        // Retrieve and listen to user information
-        listenToUserData()
 
         // Handle navigation item clicks
         navigationView.setNavigationItemSelectedListener { menuItem ->
@@ -74,8 +81,9 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
+    }
 
-        // Setup CardView click listeners
+    private fun setupCardViewListeners() {
         findViewById<CardView>(R.id.cardCekKualitas).setOnClickListener {
             startActivity(Intent(this, CekKualitasAirActivity::class.java))
         }
@@ -85,27 +93,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun listenToUserData() {
-        val user = firebaseAuth.currentUser
-        if (user != null) {
-            val userId = user.uid
-            val userRef = database.child("Users").child(userId)
+    private fun loadUserData() {
+        lifecycleScope.launch {
+            try {
+                FirebaseUtils.getCurrentUserId()?.let { userId ->
+                    // Update online status
+                    FirebaseUtils.updateOnlineStatus(userId)
 
-            userRef.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val username = snapshot.child("username").value.toString()
-                    val email = snapshot.child("email").value.toString()
+                    // Get user data
+                    val snapshot = FirebaseUtils.getUserReference(userId).awaitSingleValue()
+                    
+                    val username = snapshot.child("username").value?.toString() ?: "User"
+                    val email = snapshot.child("email").value?.toString() ?: ""
 
                     // Update UI
                     tvUserName.text = username
                     tvUserEmail.text = email
                     tvLandingUsername.text = "Halo, $username"
                 }
-
-                override fun onCancelled(error: DatabaseError) {
-                    Toast.makeText(this@MainActivity, "Gagal memuat data: ${error.message}", Toast.LENGTH_SHORT).show()
-                }
-            })
+            } catch (e: Exception) {
+                Toast.makeText(this@MainActivity, "Gagal memuat data: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -117,12 +125,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Logout user and navigate back to SignInActivity
     private fun logoutUser() {
-        firebaseAuth.signOut()
+        FirebaseAuth.getInstance().signOut()
         Toast.makeText(this, "Anda telah logout", Toast.LENGTH_SHORT).show()
         val intent = Intent(this, SignInActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Clear activity stack
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
     }
