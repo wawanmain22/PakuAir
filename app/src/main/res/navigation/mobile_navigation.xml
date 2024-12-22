@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.pakuair.ui.home.HomeFragment"
+        android:label="Beranda"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_toko"
+        android:name="com.example.pakuair.ui.toko.TokoFragment"
+        android:label="Toko Pribadi"
+        tools:layout="@layout/fragment_toko">
+        <action
+            android:id="@+id/action_nav_toko_to_tokoFormFragment"
+            app:destination="@id/nav_toko_form"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_toko_form"
+        android:name="com.example.pakuair.ui.toko.TokoFormFragment"
+        android:label="Form Toko"
+        tools:layout="@layout/fragment_toko_form">
+        <argument
+            android:name="tokoId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.example.pakuair.ui.profile.ProfileFragment"
+        android:label="Profil"
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/nav_history"
+        android:name="com.example.pakuair.ui.history.HistoryFragment"
+        android:label="Riwayat"
+        tools:layout="@layout/fragment_history" />
+
+</navigation>

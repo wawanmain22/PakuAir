@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#33B5E5</color>
+    <color name="primary_variant">#0099CC</color>
+    <color name="input_background">#1033B5E5</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- Required colors for theme -->
+    <color name="purple_200">#33B5E5</color>
+    <color name="purple_500">#33B5E5</color>
+    <color name="purple_700">#0099CC</color>
+    <color name="teal_200">#33B5E5</color>
+    <color name="teal_700">#0099CC</color>
+</resources>
