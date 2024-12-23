@@ -1,53 +1,27 @@
-# Build output directories
+# Dependencies dan build
+node_modules/
+dist/
 build/
-app/build/
+.next/
 
-# Gradle files
-.gradle/
-gradle/
-gradlew
-gradlew.bat
+# Environment dan konfigurasi lokal
+.env
+.env.local
+.env.*.local
 
-# Local configuration file
-local.properties
-
-# IDE files
-.idea/
-*.iml
-
-# Generated files
-*.class
-*.dex
-*.ap_
-*.apk
-*.aab
-
-# Log Files
+# Log files
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Android Studio Navigation editor temp files
-.navigation/
+# Editor directories
+.idea/
+.vscode/
+*.swp
+*.swo
 
-# Android Studio captures folder
-captures/
-
-# Keystore files
-*.jks
-*.keystore
-
-# Google Services
-google-services.json
-
-# External native build folder
-.cxx/
-.externalNativeBuild/
-
-# Compiled files
-bin/
-gen/
-out/
-
-# OS-specific files
+# OS generated files
 .DS_Store
 .DS_Store?
 ._*
@@ -55,3 +29,16 @@ out/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Cache
+.cache/
+.npm/
+.eslintcache
+
+# Coverage directory
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+.cursor-cache/

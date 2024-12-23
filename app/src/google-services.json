@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "502984287417",
+    "firebase_url": "https://pakuair-831fd-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "pakuair-831fd",
+    "storage_bucket": "pakuair-831fd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:502984287417:android:91a9d5d5b78a04f478e768",
+        "android_client_info": {
+          "package_name": "com.example.pakuair"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "502984287417-lo0en5ij0jpi62goa5b0nrjcbdnbtufs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGKRKDz12V8NvIA53Ny_HidOBX2hqCk8g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "502984287417-lo0en5ij0jpi62goa5b0nrjcbdnbtufs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
