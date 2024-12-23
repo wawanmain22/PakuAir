@@ -16,6 +16,9 @@ output.json
 # Local configuration file
 local.properties
 
+# Config files
+google-services.json
+
 # Android Studio / IntelliJ files
 *.iml
 .idea/
