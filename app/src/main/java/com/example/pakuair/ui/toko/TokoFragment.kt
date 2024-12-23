@@ -37,13 +37,17 @@ class TokoFragment : Fragment() {
             FirebaseManager.getTokoByUser(currentUser.uid) { tokoList ->
                 activity?.runOnUiThread {
                     if (tokoList.isNotEmpty()) {
-                        currentToko = tokoList[0] // Ambil toko pertama
-                        showTokoData(currentToko!!)
-                        binding.apply {
-                            noTokoState.visibility = View.GONE
-                            storeIcon.visibility = View.VISIBLE
-                            tokoState.visibility = View.VISIBLE
-                            editButton.visibility = View.VISIBLE
+                        // Simpan toko pertama ke currentToko
+                        currentToko = tokoList[0]
+                        // Pastikan currentToko tidak null sebelum menampilkan data
+                        currentToko?.let { toko ->
+                            showTokoData(toko)
+                            binding.apply {
+                                noTokoState.visibility = View.GONE
+                                storeIcon.visibility = View.VISIBLE
+                                tokoState.visibility = View.VISIBLE
+                                editButton.visibility = View.VISIBLE
+                            }
                         }
                     } else {
                         binding.apply {

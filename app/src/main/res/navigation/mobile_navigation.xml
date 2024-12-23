@@ -9,7 +9,16 @@
         android:id="@+id/nav_home"
         android:name="com.example.pakuair.ui.home.HomeFragment"
         android:label="Beranda"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <!-- Tambahkan action dari home ke information -->
+        <action
+            android:id="@+id/action_nav_home_to_informationFragment"
+            app:destination="@id/informationFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_toko"
@@ -38,15 +47,33 @@
     </fragment>
 
     <fragment
+        android:id="@+id/informationFragment"
+        android:name="com.example.pakuair.ui.information.InformationFragment"
+        android:label="Informasi Seputar Air"
+        tools:layout="@layout/fragment_information">
+        <action
+            android:id="@+id/action_informationFragment_to_informationDetailFragment"
+            app:destination="@id/informationDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/informationDetailFragment"
+        android:name="com.example.pakuair.ui.information.InformationDetailFragment"
+        android:label="Detail Informasi"
+        tools:layout="@layout/fragment_information_detail">
+        <argument
+            android:name="informationId"
+            app:argType="integer" />
+    </fragment>
+
+    <fragment
         android:id="@+id/nav_profile"
         android:name="com.example.pakuair.ui.profile.ProfileFragment"
         android:label="Profil"
         tools:layout="@layout/fragment_profile" />
-
-    <fragment
-        android:id="@+id/nav_history"
-        android:name="com.example.pakuair.ui.history.HistoryFragment"
-        android:label="Riwayat"
-        tools:layout="@layout/fragment_history" />
 
 </navigation>

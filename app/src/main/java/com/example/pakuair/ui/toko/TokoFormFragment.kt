@@ -12,6 +12,11 @@ import com.example.pakuair.R
 import com.example.pakuair.data.FirebaseManager
 import com.example.pakuair.data.model.Toko
 import com.example.pakuair.databinding.FragmentTokoFormBinding
+import androidx.core.view.MenuProvider
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 
 class TokoFormFragment : Fragment() {
     private var _binding: FragmentTokoFormBinding? = null
@@ -30,6 +35,28 @@ class TokoFormFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Setup toolbar untuk navigasi back
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+        }
+
+        // Tambahkan menu provider untuk handle back button
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                // Tidak perlu inflate menu
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    android.R.id.home -> {
+                        findNavController().navigateUp()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner)
         
         // Get existing toko if in edit mode
         arguments?.getString("tokoId")?.let { tokoId ->

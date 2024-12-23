@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.pakuair.databinding.FragmentHomeBinding
 import com.example.pakuair.data.FirebaseManager
+import androidx.navigation.fragment.findNavController
+import com.example.pakuair.R
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
@@ -52,7 +54,7 @@ class HomeFragment : Fragment() {
             }
 
             infoCard.setOnClickListener {
-                // TODO: Navigate to information screen
+                findNavController().navigate(R.id.action_nav_home_to_informationFragment)
             }
 
             depotCard.setOnClickListener {

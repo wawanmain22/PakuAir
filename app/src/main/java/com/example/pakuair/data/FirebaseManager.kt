@@ -166,26 +166,27 @@ object FirebaseManager {
     }
 
     fun getTokoByUser(userId: String, onComplete: (List<Toko>) -> Unit) {
-        // Pastikan hanya mengambil toko milik user yang sedang login
-        if (userId != getCurrentUser()?.uid) {
-            onComplete(emptyList())
-            return
-        }
+        println("Fetching toko for user: $userId")
 
-        tokoRef.orderByChild("userId").equalTo(userId).get()
+        tokoRef.get()
             .addOnSuccessListener { snapshot ->
+                println("Got database snapshot")
                 val tokoList = mutableListOf<Toko>()
+
                 snapshot.children.forEach { child ->
-                    child.getValue(Toko::class.java)?.let { toko ->
-                        // Double check untuk memastikan hanya toko milik user yang diambil
-                        if (toko.userId == userId) {
-                            tokoList.add(toko)
-                        }
+                    val toko = child.getValue(Toko::class.java)
+                    println("Found toko: ${child.key}, userId: ${toko?.userId}")
+
+                    if (toko?.userId == userId) {
+                        tokoList.add(toko)
                     }
                 }
+
+                println("Found ${tokoList.size} toko for user")
                 onComplete(tokoList)
             }
-            .addOnFailureListener {
+            .addOnFailureListener { error ->
+                println("Error fetching toko: ${error.message}")
                 onComplete(emptyList())
             }
     }
