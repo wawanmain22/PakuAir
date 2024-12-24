@@ -1,6 +1,7 @@
 package com.example.pakuair.ui.depot
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pakuair.R
 import com.example.pakuair.data.FirebaseManager
-import com.example.pakuair.data.HasilCekAir
+import com.example.pakuair.data.model.HasilCekAir
 import com.example.pakuair.data.model.Toko
 import com.example.pakuair.databinding.FragmentDepotBinding
 import com.example.pakuair.databinding.ItemDepotBinding
@@ -51,26 +52,32 @@ class DepotFragment : Fragment() {
     }
 
     private fun loadDepots() {
+        Log.d("DepotFragment", "Loading depots...")
         binding.progressBar.visibility = View.VISIBLE
         binding.emptyText.visibility = View.GONE
 
         FirebaseManager.getDepotWithGoodWater { depotList ->
-            if (!isAdded) return@getDepotWithGoodWater
+            if (!isAdded) {
+                Log.d("DepotFragment", "Fragment not attached, ignoring results")
+                return@getDepotWithGoodWater
+            }
 
+            Log.d("DepotFragment", "Received ${depotList.size} depots")
             binding.progressBar.visibility = View.GONE
 
             if (depotList.isEmpty()) {
+                Log.d("DepotFragment", "No depots found")
                 binding.emptyText.visibility = View.VISIBLE
             } else {
+                Log.d("DepotFragment", "Submitting depot list to adapter")
                 depotAdapter.submitList(depotList)
             }
         }
     }
 
     private fun navigateToDetail(toko: Toko) {
-        findNavController().navigate(
-            DepotFragmentDirections.actionNavDepotToDepotDetailFragment(toko.id)
-        )
+        val action = DepotFragmentDirections.actionNavDepotToDepotDetailFragment(tokoId = toko.id)
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {

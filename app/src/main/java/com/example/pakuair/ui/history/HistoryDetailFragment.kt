@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.pakuair.R
 import com.example.pakuair.data.FirebaseManager
-import com.example.pakuair.data.HasilCekAir
+import com.example.pakuair.data.model.HasilCekAir
 import com.example.pakuair.databinding.FragmentHistoryDetailBinding
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView

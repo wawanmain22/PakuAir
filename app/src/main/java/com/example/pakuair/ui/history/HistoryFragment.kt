@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pakuair.R
 import com.example.pakuair.data.FirebaseManager
-import com.example.pakuair.data.HasilCekAir
+import com.example.pakuair.data.model.HasilCekAir
 import com.example.pakuair.databinding.FragmentHistoryBinding
 import com.example.pakuair.databinding.ItemHistoryBinding
 import java.text.SimpleDateFormat
