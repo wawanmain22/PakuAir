@@ -2,6 +2,8 @@ plugins {
     id("com.android.application") version "8.7.3"
     id("org.jetbrains.kotlin.android") version "2.0.0-Beta1"
     id("com.google.gms.google-services")
+    id("androidx.navigation.safeargs.kotlin")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -64,4 +66,15 @@ dependencies {
     implementation("com.github.f0ris.sweetalert:library:1.6.2")
 
     implementation("androidx.gridlayout:gridlayout:1.0.0")
+
+    // OkHttp untuk network calls
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+    // Gson untuk JSON processing
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+
 }

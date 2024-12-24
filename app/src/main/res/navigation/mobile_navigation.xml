@@ -10,7 +10,15 @@
         android:name="com.example.pakuair.ui.home.HomeFragment"
         android:label="Beranda"
         tools:layout="@layout/fragment_home">
-        <!-- Tambahkan action dari home ke information -->
+
+        <action
+            android:id="@+id/action_nav_home_to_cekAirFragment"
+            app:destination="@id/cekAirFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
         <action
             android:id="@+id/action_nav_home_to_informationFragment"
             app:destination="@id/informationFragment"
@@ -18,6 +26,69 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_nav_home_to_nav_toko"
+            app:destination="@id/nav_toko"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_nav_home_to_historyFragment"
+            app:destination="@id/historyFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_nav_home_to_nav_depot"
+            app:destination="@id/nav_depot"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cekAirFragment"
+        android:name="com.example.pakuair.ui.cekair.CekAirFragment"
+        android:label="Cek Kualitas Air"
+        tools:layout="@layout/fragment_cekair">
+        <action
+            android:id="@+id/action_cekAirFragment_to_hasilCekAirFragment"
+            app:destination="@id/hasilCekAirFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/hasilCekAirFragment"
+        android:name="com.example.pakuair.ui.cekair.CekAirHasilFragment"
+        android:label="Hasil Pemeriksaan"
+        tools:layout="@layout/fragment_hasil_cekair">
+        <argument
+            android:name="cekAir"
+            app:argType="com.example.pakuair.data.model.CekAir" />
+        <argument
+            android:name="potability"
+            app:argType="integer" />
+        <argument
+            android:name="message"
+            app:argType="string" />
+        <argument
+            android:name="predictionTime"
+            app:argType="string" />
+        <argument
+            android:name="cpuUsage"
+            app:argType="string" />
+        <argument
+            android:name="memoryUsage"
+            app:argType="string" />
     </fragment>
 
     <fragment
@@ -75,5 +146,53 @@
         android:name="com.example.pakuair.ui.profile.ProfileFragment"
         android:label="Profil"
         tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.example.pakuair.ui.history.HistoryFragment"
+        android:label="Riwayat Pemeriksaan"
+        tools:layout="@layout/fragment_history">
+        <action
+            android:id="@+id/action_historyFragment_to_historyDetailFragment"
+            app:destination="@id/historyDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/historyDetailFragment"
+        android:name="com.example.pakuair.ui.history.HistoryDetailFragment"
+        android:label="Detail Pemeriksaan"
+        tools:layout="@layout/fragment_history_detail">
+        <argument
+            android:name="hasilId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_depot"
+        android:name="com.example.pakuair.ui.depot.DepotFragment"
+        android:label="Depot Air Minum"
+        tools:layout="@layout/fragment_depot">
+        <action
+            android:id="@+id/action_nav_depot_to_depotDetailFragment"
+            app:destination="@id/depotDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/depotDetailFragment"
+        android:name="com.example.pakuair.ui.depot.DepotDetailFragment"
+        android:label="Detail Depot"
+        tools:layout="@layout/fragment_depot_detail">
+        <argument
+            android:name="tokoId"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

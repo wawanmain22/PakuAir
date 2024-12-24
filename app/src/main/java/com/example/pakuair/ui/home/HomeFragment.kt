@@ -46,11 +46,11 @@ class HomeFragment : Fragment() {
     private fun setupClickListeners() {
         binding.apply {
             checkQualityCard.setOnClickListener {
-                // TODO: Navigate to check quality screen
+                findNavController().navigate(R.id.action_nav_home_to_cekAirFragment)
             }
 
             historyCard.setOnClickListener {
-                // TODO: Navigate to history screen
+                findNavController().navigate(R.id.action_nav_home_to_historyFragment)
             }
 
             infoCard.setOnClickListener {
@@ -58,7 +58,7 @@ class HomeFragment : Fragment() {
             }
 
             depotCard.setOnClickListener {
-                // TODO: Navigate to depot screen
+                findNavController().navigate(R.id.action_nav_home_to_nav_depot)
             }
         }
     }

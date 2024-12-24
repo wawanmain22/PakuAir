@@ -12,4 +12,16 @@
     <color name="purple_700">#0099CC</color>
     <color name="teal_200">#33B5E5</color>
     <color name="teal_700">#0099CC</color>
+
+    <!-- Result colors -->
+    <color name="success_background">#E8F5E9</color>
+    <color name="error_background">#FFEBEE</color>
+
+    <!-- Parameter colors -->
+    <color name="normal_parameter_background">#E8F5E9</color>
+    <color name="abnormal_parameter_background">#FFEBEE</color>
+
+    <!-- Warna untuk status -->
+    <color name="success_text">#4CAF50</color>  <!-- Hijau -->
+    <color name="error_text">#F44336</color>    <!-- Merah -->
 </resources>

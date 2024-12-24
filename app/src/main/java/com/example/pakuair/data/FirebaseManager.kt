@@ -8,6 +8,10 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.example.pakuair.data.model.User
 import com.example.pakuair.data.model.Toko
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.GenericTypeIndicator
 
 object FirebaseManager {
     private val auth: FirebaseAuth by lazy { Firebase.auth }
@@ -20,6 +24,7 @@ object FirebaseManager {
     // References
     private val usersRef = database.getReference("users")
     private val tokoRef = database.getReference("toko")
+    private val hasilCekAirRef = database.getReference("hasilCekAir")
 
     // Auth Methods
     fun getCurrentUser() = auth.currentUser
@@ -221,4 +226,239 @@ object FirebaseManager {
                 onComplete(task.isSuccessful)
             }
     }
-} 
+
+    fun saveHasilCekAir(
+        parameters: Map<String, Double>,
+        result: Map<String, Any>,
+        onComplete: (Boolean, String?) -> Unit
+    ) {
+        val userId = getCurrentUser()?.uid ?: return onComplete(false, "User tidak ditemukan")
+        
+        val hasilCekAir = hashMapOf(
+            "timestamp" to System.currentTimeMillis(),
+            "parameters" to parameters,
+            "result" to result
+        )
+
+        hasilCekAirRef
+            .child(userId)
+            .push()
+            .setValue(hasilCekAir)
+            .addOnCompleteListener { task ->
+                onComplete(
+                    task.isSuccessful,
+                    if (task.isSuccessful) null else task.exception?.message
+                )
+            }
+    }
+
+    // Tambahkan method untuk mengambil history
+    fun getHasilCekAir(onComplete: (List<HasilCekAir>) -> Unit) {
+        val userId = getCurrentUser()?.uid ?: return onComplete(emptyList())
+        
+        hasilCekAirRef.child(userId)
+            .orderByChild("timestamp")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val hasilList = mutableListOf<HasilCekAir>()
+                    for (child in snapshot.children.reversed()) {
+                        try {
+                            val timestamp = child.child("timestamp").getValue(Long::class.java) ?: continue
+                            val parameters = child.child("parameters")
+                                .getValue(object : GenericTypeIndicator<Map<String, Double>>() {}) ?: continue
+                            val result = child.child("result")
+                                .getValue(object : GenericTypeIndicator<Map<String, Any>>() {}) ?: continue
+                            
+                            hasilList.add(HasilCekAir(
+                                id = child.key ?: "",
+                                timestamp = timestamp,
+                                parameters = parameters,
+                                potability = (result["potability"] as? Long)?.toInt() ?: 0,
+                                message = result["message"] as? String ?: "",
+                                predictionTime = result["prediction_time"] as? String ?: ""
+                            ))
+                        } catch (e: Exception) {
+                            println("Error parsing hasil: ${e.message}")
+                        }
+                    }
+                    onComplete(hasilList)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    onComplete(emptyList())
+                }
+            })
+    }
+
+    fun getHasilCekAirById(hasilId: String, onComplete: (HasilCekAir?) -> Unit) {
+        val userId = getCurrentUser()?.uid ?: return onComplete(null)
+        
+        hasilCekAirRef.child(userId).child(hasilId)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                try {
+                    val timestamp = snapshot.child("timestamp").getValue(Long::class.java)
+                    val parameters = snapshot.child("parameters")
+                        .getValue(object : GenericTypeIndicator<Map<String, Double>>() {})
+                    val result = snapshot.child("result")
+                        .getValue(object : GenericTypeIndicator<Map<String, Any>>() {})
+                    
+                    if (timestamp != null && parameters != null && result != null) {
+                        val hasil = HasilCekAir(
+                            id = snapshot.key ?: "",
+                            timestamp = timestamp,
+                            parameters = parameters,
+                            potability = (result["potability"] as? Long)?.toInt() ?: 0,
+                            message = result["message"] as? String ?: "",
+                            predictionTime = result["prediction_time"] as? String ?: ""
+                        )
+                        onComplete(hasil)
+                    } else {
+                        onComplete(null)
+                    }
+                } catch (e: Exception) {
+                    println("Error parsing hasil: ${e.message}")
+                    onComplete(null)
+                }
+            }
+            .addOnFailureListener {
+                onComplete(null)
+            }
+    }
+
+    fun addHasilCekAirListener(userId: String, onResult: (HasilCekAir?) -> Unit) {
+        hasilCekAirRef.child(userId)
+            .orderByChild("timestamp")
+            .limitToLast(1)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (!snapshot.exists()) {
+                        onResult(null)
+                        return
+                    }
+
+                    try {
+                        val lastHasil = snapshot.children.first()
+                        val timestamp = lastHasil.child("timestamp").getValue(Long::class.java)
+                        val parameters = lastHasil.child("parameters")
+                            .getValue(object : GenericTypeIndicator<Map<String, Double>>() {})
+                        val result = lastHasil.child("result")
+                            .getValue(object : GenericTypeIndicator<Map<String, Any>>() {})
+
+                        if (timestamp != null && parameters != null && result != null) {
+                            val hasil = HasilCekAir(
+                                id = lastHasil.key ?: "",
+                                timestamp = timestamp,
+                                parameters = parameters,
+                                potability = (result["potability"] as? Long)?.toInt() ?: 0,
+                                message = result["message"] as? String ?: "",
+                                predictionTime = result["prediction_time"] as? String ?: ""
+                            )
+                            onResult(hasil)
+                        } else {
+                            onResult(null)
+                        }
+                    } catch (e: Exception) {
+                        println("Error parsing hasil: ${e.message}")
+                        onResult(null)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    println("Error loading hasil: ${error.message}")
+                    onResult(null)
+                }
+            })
+    }
+
+    fun getDepotWithGoodWater(onComplete: (List<Pair<Toko, HasilCekAir>>) -> Unit) {
+        val depotList = mutableListOf<Pair<Toko, HasilCekAir>>()
+        var completedChecks = 0L
+
+        tokoRef.get().addOnSuccessListener { tokoSnapshot ->
+            val totalToko = tokoSnapshot.childrenCount
+            println("Total toko found: $totalToko") // Tambahkan log
+
+            if (totalToko == 0L) {
+                onComplete(emptyList())
+                return@addOnSuccessListener
+            }
+
+            tokoSnapshot.children.forEach { tokoData ->
+                val toko = tokoData.getValue(Toko::class.java) ?: run {
+                    completedChecks++
+                    if (completedChecks == totalToko) {
+                        onComplete(depotList.sortedByDescending { it.second.timestamp })
+                    }
+                    return@forEach
+                }
+
+                hasilCekAirRef.child(toko.userId)
+                    .orderByChild("timestamp")
+                    .limitToLast(1)
+                    .get()
+                    .addOnSuccessListener { hasilSnapshot ->
+                        if (hasilSnapshot.exists()) {
+                            val lastHasil = hasilSnapshot.children.first()
+                            try {
+                                val result = lastHasil.child("result")
+                                    .getValue(object : GenericTypeIndicator<Map<String, Any>>() {})
+
+                                // Penanganan nullable yang lebih aman
+                                val potability = result?.let {
+                                    (it["potability"] as? Long)?.toInt()
+                                } ?: 0
+
+                                if (potability == 1) {
+                                    val timestamp = lastHasil.child("timestamp").getValue(Long::class.java)
+                                    val parameters = lastHasil.child("parameters")
+                                        .getValue(object : GenericTypeIndicator<Map<String, Double>>() {})
+                                    val message = result?.get("message") as? String ?: ""
+                                    val predictionTime = result?.get("prediction_time") as? String ?: ""
+
+                                    if (timestamp != null && parameters != null) {
+                                        val hasil = HasilCekAir(
+                                            id = lastHasil.key ?: "",
+                                            timestamp = timestamp,
+                                            parameters = parameters,
+                                            potability = potability,
+                                            message = message,
+                                            predictionTime = predictionTime
+                                        )
+                                        depotList.add(Pair(toko, hasil))
+                                    }
+                                }
+                            } catch (e: Exception) {
+                                println("Error parsing hasil for toko ${toko.id}: ${e.message}")
+                            }
+                        }
+
+                        completedChecks++
+                        if (completedChecks == totalToko) {
+                            onComplete(depotList.sortedByDescending { it.second.timestamp })
+                        }
+                    }
+                    .addOnFailureListener {
+                        println("Failed to get hasil for toko ${toko.id}: ${it.message}")
+                        completedChecks++
+                        if (completedChecks == totalToko) {
+                            onComplete(depotList.sortedByDescending { it.second.timestamp })
+                        }
+                    }
+            }
+        }.addOnFailureListener {
+            println("Failed to get toko list: ${it.message}")
+            onComplete(emptyList())
+        }
+    }
+}
+
+// Data class untuk hasil cek air
+data class HasilCekAir(
+    val id: String,
+    val timestamp: Long,
+    val parameters: Map<String, Double>,
+    val potability: Int,
+    val message: String,
+    val predictionTime: String
+) 
